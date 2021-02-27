@@ -1,11 +1,3 @@
-
-let currQuestion = 0;
-let score = 0;
-const totalQuestions = document.querySelector("#totalQuestions");
-const questionWrapper = document.querySelector(".questionBox");
-let img = document.querySelector(".story");
-let scoreBoard = document.querySelector("#score");
-
 const questions = [
   {
     question: "How did Daenerys Targaryen eventually hatch her dragon eggs?",
@@ -190,79 +182,86 @@ const questions = [
 
 ];
 
+const questionWrapper = document.querySelector(".question-wrapper");
+const imgBox = document.querySelector(".img");
+const scoreBoard = document.querySelector("#score");
+document.querySelector("#total-questions").innerText =`${questions.length}`;
 
-totalQuestions.innerText = questions.length;
+let qCounter = 0;
+let score = 0;
 
-//functia de start atasata butonului care creaza elementele noi 
-const displayQuestion = () => {
-   
-  questionWrapper.innerHTML = "";
-  checkOutcome();
-  img.setAttribute("src", questions[currQuestion].image);
-  const question = document.createElement("div");
-  const para = document.createElement("p");
-  para.classList.add("question");
-  para.innerText = questions[currQuestion].question;
-  question.appendChild(para);
-  const list = document.createElement("ol");
-
-  for (let key in questions[currQuestion].answers) {
-    let li = document.createElement("li");
-    li.id = `${key}`;
-    li.innerText = questions[currQuestion].answers[key];
-    list.appendChild(li);
+//adaugarea evrntului pe buton
+  const btn = document.querySelector(".nextBtn");
+  btn.addEventListener("click",()=>{
+    if (qCounter < questions.length) {
+       displayQuestion(questions,qCounter,questionWrapper,imgBox); 
+        qCounter++;
+        btn.innerText = "Next Question";
   }
-
-  list.addEventListener("click", (e) => {
-    if(e.target.id){
-    checkCorrect(e);
-    list.classList.add("disabled");
+    else{
+      checkOutcome(score,questions,questionWrapper,imgBox);
+      btn.remove();
     }
-  })
-  question.appendChild(list)
-  questionWrapper.appendChild(question);
+   
+})
+//functia de verificare a outcome-ului
+ const checkOutcome = (score,questionsArr,questionWrapper,imgBox) =>{
+    if(score<10){
+      imgBox.setAttribute("src","./assets/img/nWatch.jpg")
+      questionWrapper.innerHTML = `<p class="question"> Prepare to join the night's watch!
 
-  const nextBtn = document.createElement("button");
-  nextBtn.innerText = "Next Question";
-  nextBtn.classList.add("nextBtn");
-  nextBtn.onclick = displayQuestion;
-  questionWrapper.appendChild(nextBtn);
+      You scored ${score} out of ${questionsArr.length} </p> `
+    } else {
+      imgBox.setAttribute("src","./assets/img/tRoom.jpg")
+      questionWrapper.innerHTML = `<p class="question"> The whole kingdom bows before you!
 
-  
-};
-
-checkOutcome = () =>{
- if( currQuestion === questions.length){
-   if ( score < 10){
-    img.setAttribute("src","./assets/img/nWatch.jpg")
-     questionWrapper.innerHTML = `<h1 class="question">Prepare to join the night's watch!
-
-     You scored ${score} out of ${questions.length}</h1>`
-   } else if (score > 10){
-     img.setAttribute("src","./assets/img/tRoom.jpg")
-    questionWrapper.innerHTML = `<h1 class="question">The seven kingdoms bow before you!
-
-    You scored ${score} out of ${questions.length}</h1>`
-   }
+      You scored ${score} out of ${questionsArr.length} </p>`
+    }
  }
+ 
+
+
+//functia de display a intrebarii
+const displayQuestion = (questionsArr, counter,qWrapper,imgDisplay) => {
+  
+  //schimbarea imaginii in concordanta cu numarul intrebarii "qCounter"
+  imgDisplay.setAttribute("src",questionsArr[counter].image);
+  qWrapper.innerText = "";
+  const question = document.createElement("p");
+  question.classList.add("question")
+  question.innerText = questionsArr[counter].question;
+  qWrapper.appendChild(question);
+  //crearea listei de raspunsuri 
+  const ol = document.createElement("ol");
+  for (let answer in questionsArr[counter].answers){
+    const li = document.createElement("li");
+    li.innerText = questionsArr[counter].answers[answer];
+    li.id = answer;
+    ol.appendChild(li);
+  };
+//atasarea eventListenerului de lista
+
+  ol.addEventListener("click",ev=>{
+    if(!ev.target.id) return;
+    if(ev.target.id === questionsArr[counter].correctAnswer){
+      ev.target.classList.add("correct");
+      score++;
+    } else if (ev.target.id !== questionsArr[counter].correctAnswer) {
+      ev.target.classList.add("incorrect");
+  }
+  ol.classList.add("disabled");
+  scoreBoard.innerText = score;
+});
+  qWrapper.appendChild(ol);
 }
 
-//functia de verificare a raspunsului
-const checkCorrect = (ev) => {
-  if (ev.target.id === questions[currQuestion].correctAnswer) {
-    score++;
-    ev.target.classList.add("correct");
-    
 
-  }
-  else if (ev.target.id !== questions[currQuestion].correctAnswer) {
-    ev.target.classList.add("incorrect");
 
-  }
-  currQuestion++;
-  scoreBoard.innerText = score;
   
-};
+
+
+
+
 
 
 
