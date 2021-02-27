@@ -14,20 +14,19 @@
 
 <body>
   <h1>GoT Quiz Game</h1>
-  <h3>Score: <span id="score">0</span> of <span id="totalQuestions"></span></h3>
+  <h3>Score: <span id="score">0</span> of <span id="total-questions"></span></h3>
   <div class="container">
-    <div class="gameFace">
-      <img class="story" src="./assets/img/intro.jpg" alt="">
-      <div class="questionBox">
-        <p class="question">How well do you know your 'Game of Thrones' trivia? Can you achieve the Iron Throne or are
-          you destined to
-          join the Night's Watch along the Wall?</p>
-        <button class="playGame btn" onclick="displayQuestion(questions)">Start the quiz!</button>
-
-
-
+    <div class="game-wrapper">
+      <img class="img" src="./assets/img/intro.jpg" alt="">
+      <div class="right-side">
+        <div class="question-wrapper">
+          <p class="question">How well do you know your 'Game of Thrones' trivia? Can you achieve the Iron Throne or are
+            you destined to
+            join the Night's Watch along the Wall?</p>
+        </div>
+        <button class="nextBtn">Start Button</button>
       </div>
-      
+
     </div>
 
     <script src="app.js"></script>
